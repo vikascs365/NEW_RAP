@@ -1,0 +1,62 @@
+@Metadata.layer: #CUSTOMER
+
+@UI.headerInfo: { typeName: 'Travel', typeNamePlural: 'Travels'}
+@Search.searchable: true
+annotate view zc_travel_100 with
+{
+
+  @UI.facet: [{ purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Details', position: 10}]
+  @UI.selectionField: [{ position: 10 }]
+  @UI.lineItem: [{ position: 10 }]
+  @EndUserText.label: 'Travel Id'
+  TravelId;
+  @UI.selectionField: [{ position: 20 }]
+  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [{ position: 20 }]
+  @Consumption.valueHelpDefinition: [{entity:{ name: 'ZI_agency_100', element: 'AgencyId'}}]
+  @Search.defaultSearchElement: true
+  @Search.fuzzinessThreshold: 0.70
+  AgencyId;
+  @UI.selectionField: [{ position: 30 }]
+  @UI.lineItem: [{ position: 30 }]
+  @EndUserText.label: 'CustomerID'
+  @UI.identification: [{ position: 30 }]
+  @Consumption.valueHelpDefinition: [{entity:{ name: 'zi_customer_100', element: 'CustomerId'}} ]
+  @Search.defaultSearchElement: true
+  @Search.fuzzinessThreshold: 0.70
+  CustomerId;
+  @UI.identification: [{ position: 40 }]
+  BeginDate;
+  @UI.identification: [{ position: 50 }]
+  EndDate;
+  @UI.identification: [{ position: 60 }]
+  BookingFee;
+  @UI.selectionField: [{ position: 40 }]
+  @UI.lineItem: [{ position: 40 }]
+  @EndUserText.label: 'Total Price'
+  @UI.identification: [{ position: 70 }]
+  TotalPrice;
+  @UI.selectionField: [{ position: 50 }]
+  @UI.lineItem: [{ position: 50 }]
+  @EndUserText.label: 'Currency Code'
+  @UI.identification: [{ position: 80 }]
+  CurrencyCode;
+  @UI.lineItem: [{ position: 60 }]
+  @UI.identification: [{ position: 90 }]
+  Description;
+  @UI.lineItem: [{ position: 70 }]
+  @UI.identification: [{ position: 100 }]
+  Status;
+  //  Createdby;
+  //  Createdat;
+  //  Lastchangedby;
+  //  Lastchangedat;
+  /* Associations */
+  @UI.lineItem: [{ position: 80 }]
+  _Agency;
+  @UI.lineItem: [{ position: 90 }]
+  _Currency;
+  @UI.lineItem: [{ position: 100 }]
+  _Customer;
+
+}
