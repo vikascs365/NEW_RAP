@@ -10,4 +10,5 @@ authorization master ( instance )
   create;
   update;
   delete;
+// new comment line added for push to repository
 }
