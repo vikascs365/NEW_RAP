@@ -79,9 +79,69 @@ CLASS lhc_zc_travel_100 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD update.
+
+  Data: ls_travel_in TYPE /dmo/s_travel_in,
+        ls_travel_x TYPE /dmo/s_travel_inx,
+        lt_messages TYPE /dmo/t_message.
+  loop at entities ASSIGNING FIELD-SYMBOL(<updated>).
+
+  ls_travel_in = map_data( im_data = CORRESPONDING #( <updated> ) ).
+  ls_travel_x-agency_id = xsdbool( <updated>-%control-AgencyId = cl_abap_behv=>flag_changed ).
+  ls_travel_x-begin_date = xsdbool( <updated>-%control-BeginDate = cl_abap_behv=>flag_changed ).
+  ls_travel_x-booking_fee = xsdbool( <updated>-%control-BookingFee = cl_abap_behv=>flag_changed ).
+  ls_travel_x-currency_code = xsdbool( <updated>-%control-CurrencyCode = cl_abap_behv=>flag_changed ).
+  ls_travel_x-customer_id = xsdbool( <updated>-%control-CustomerId = cl_abap_behv=>flag_changed ).
+  ls_travel_x-description = xsdbool( <updated>-%control-Description = cl_abap_behv=>flag_changed ).
+  ls_travel_x-end_date = xsdbool( <updated>-%control-EndDate = cl_abap_behv=>flag_changed ).
+  ls_travel_x-status = xsdbool( <updated>-%control-Status = cl_abap_behv=>flag_changed ).
+  ls_travel_x-total_price = xsdbool( <updated>-%control-TotalPrice = cl_abap_behv=>flag_changed ).
+  ls_travel_x-travel_id = <updated>-TravelId.
+  ls_travel_in-travel_id = <updated>-TravelId.
+
+  CALL FUNCTION '/DMO/FLIGHT_TRAVEL_UPDATE'
+    EXPORTING
+      is_travel   = ls_travel_in
+      is_travelx  = ls_travel_x
+*     it_booking  =
+*     it_bookingx =
+*     it_booking_supplement  =
+*     it_booking_supplementx =
+    IMPORTING
+*     es_travel   =
+*     et_booking  =
+*     et_booking_supplement  =
+      et_messages = lt_messages.
+  LOOP AT lt_messages TRANSPORTING NO FIELDS WHERE msgty = 'E'  OR msgty = 'A' .
+    INSERT VALUE #( %cid = <updated>-%cid_ref travelid = <updated>-TravelId ) INTO TABLE failed-zc_travel_100.
+  ENDLOOP.
+
+  ENDLOOP.
+
+
+
   ENDMETHOD.
 
   METHOD delete.
+
+  data: lv_travel_id TYPE /dmo/travel_id ,
+        lt_messages TYPE /dmo/t_message.
+
+  loop at keys ASSIGNING FIELD-SYMBOL(<deleted>).
+
+  lv_travel_id = <deleted>-TravelId.
+  CALL FUNCTION '/DMO/FLIGHT_TRAVEL_DELETE'
+    EXPORTING
+      iv_travel_id =  lv_travel_id
+    IMPORTING
+     et_messages  =  lt_messages
+    .
+
+          loop at lt_messages TRANSPORTING NO FIELDS where msgty = 'E'  or msgty = 'A' .
+              insert value #( %cid = <deleted>-%cid_ref travelid = <deleted>-TravelId ) into table failed-zc_travel_100.
+            endloop.
+
+  endloop.
+
   ENDMETHOD.
 
   METHOD read.
